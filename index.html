@@ -93,7 +93,8 @@
         #manualStickerBar button,
         #manualRatioBar button,
         #manualAudioBar button,
-        #manualFxBar button {
+        #manualFxBar button,
+        #manualEditBar button {
             border-radius: 0;
             background: transparent;
             border: none;
@@ -1175,13 +1176,7 @@
                                     <span>•</span>
                                     <span>00:04</span>
                                 </div>
-                                <div class="flex gap-1.5 overflow-hidden py-0.5">
-                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden relative"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"><span class="absolute inset-0 bg-black/20"></span></div>
-                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
-                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
-                                    <div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden"><img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover"></div>
-                                    <button type="button" class="w-[48px] h-[68px] rounded-[12px] bg-white text-[#333] text-[24px] font-light shrink-0 shadow-sm">+</button>
-                                </div>
+                                <div id="manualVideoTrackStrip" class="flex gap-1.5 items-center overflow-x-auto no-scrollbar py-0.5"></div>
                                 <div class="mt-3 h-[50px] rounded-[14px] bg-[#232427] border border-white/6 flex items-center px-4 text-white/78 text-[14px]">
                                     <i class="fa-solid fa-plus mr-2 text-[13px]"></i> 添加音频
                                 </div>
@@ -1192,7 +1187,7 @@
 
                     <div class="mt-auto pt-2 pb-0">
                         <div id="manualToolMainBar" class="grid grid-cols-7 gap-1 text-center text-white/90 px-1.5 pt-1.5 pb-0">
-                            <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-rectangle-list text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">编辑</span></button>
+                            <button type="button" onclick="openManualSubtool('edit')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-rectangle-list text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">编辑</span></button>
                             <button type="button" onclick="openManualFilterLibrary()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-droplet text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">滤镜</span></button>
                             <button type="button" onclick="openManualSubtool('subtitle')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-closed-captioning text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">字幕</span></button>
                             <button type="button" onclick="openManualSubtool('sticker')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-face-smile text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">贴纸</span></button>
@@ -1205,6 +1200,24 @@
                             <button type="button" onclick="closeManualSubtool()" class="w-[42px] h-[52px] text-white/78 flex items-center justify-center active:scale-95 transition shrink-0 mb-1">
                                 <i class="fa-solid fa-chevron-left text-[18px]"></i>
                             </button>
+                            <div id="manualEditBar" class="hidden flex-1 flex items-stretch gap-0 overflow-x-auto no-scrollbar min-w-0 text-center">
+                                <button type="button" onclick="splitManualVideoClip()" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-scissors text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">分割</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-palette text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">变色</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-volume-high text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">音量</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-wand-magic-sparkles text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">动画</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-regular fa-trash-can text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">删除</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-right-left text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">替换</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-mask text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">蒙版</span></button>
+                                <button type="button" onclick="openManualFilterLibrary()" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-droplet text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">滤镜</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-sliders text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">调节</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-circle-half-stroke text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">透明度</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-rotate-right text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">角度</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-crop text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">裁剪</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-arrows-left-right text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">镜像</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-regular fa-copy text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">复制</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-backward text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">倒放</span></button>
+                                <button type="button" class="manual-edit-tool shrink-0 w-[52px] py-2 active:scale-95 transition flex flex-col items-center justify-start"><i class="fa-solid fa-camera text-[20px] mb-1 text-white/90"></i><span class="text-[9px] leading-none text-white/80 whitespace-nowrap">定格</span></button>
+                            </div>
                             <div id="manualSubtitleBar" class="hidden flex-1 grid grid-cols-2 gap-1 text-center">
                                 <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-square-plus text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">新建字幕</span></button>
                                 <button type="button" onclick="openManualSubtitleTemplateLibrary()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-rectangle-list text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">字幕模板</span></button>
@@ -1233,6 +1246,19 @@
                     </div>
 
 
+                    <div id="manualTransitionPanel" class="hidden absolute left-0 right-0 bottom-0 z-[45] bg-[#1a1a1f] rounded-t-[20px] border-t border-white/5 shadow-2xl">
+                        <div class="flex items-center gap-6 px-5 pt-4 pb-2 text-[15px] font-semibold border-b border-white/5">
+                            <button type="button" onclick="setManualTransitionCategory('new')" data-trans-cat="new" data-trans-label="New🤟" class="manual-trans-cat text-[#ff7a00] relative pb-2">New🤟<span class="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ff7a00] rounded-full"></span></button>
+                            <button type="button" onclick="setManualTransitionCategory('2d')" data-trans-cat="2d" data-trans-label="2D" class="manual-trans-cat text-white/45 relative pb-2">2D</button>
+                            <button type="button" onclick="setManualTransitionCategory('3d')" data-trans-cat="3d" data-trans-label="3D" class="manual-trans-cat text-white/45 relative pb-2">3D</button>
+                        </div>
+                        <div id="manualTransitionList" class="flex gap-3 px-4 py-4 overflow-x-auto no-scrollbar"></div>
+                        <div class="flex items-center justify-between px-5 py-3 border-t border-white/5">
+                            <button type="button" onclick="toggleManualTransitionApplyAll()" id="manualTransitionApplyAllBtn" class="text-[14px] text-white/55 active:opacity-80 transition">应用到全部</button>
+                            <button type="button" onclick="confirmManualTransition()" class="w-10 h-10 flex items-center justify-center text-white active:scale-95 transition"><i class="fa-solid fa-check text-[22px]"></i></button>
+                        </div>
+                    </div>
+
                     <div id="manualSoundFxPanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#15151b] rounded-t-[26px] border-t border-white/5 px-4 pt-4 pb-6 shadow-2xl">
                         <div class="flex items-center gap-3 mb-4">
                             <div class="flex-1 h-12 rounded-full bg-white/10 flex items-center px-4 text-white/45 text-[15px]"><i class="fa-solid fa-magnifying-glass mr-3 text-[16px]"></i>输入搜索词</div>
@@ -1244,7 +1270,7 @@
                             <button type="button" onclick="setManualSoundFxCategory('football')" data-sfx-cat="football" data-sfx-label="足球" class="manual-sfx-cat text-white/90 relative pb-1">足球</button>
                             <button type="button" onclick="setManualSoundFxCategory('hockey')" data-sfx-cat="hockey" data-sfx-label="冰球" class="manual-sfx-cat text-white/90 relative pb-1">冰球</button>
                         </div>
-                        <p id="manualSoundFxCategoryHint" class="text-[12px] text-white/45 mb-4">欢呼、口哨、碰撞、系统UI音效等</p>
+                        <p id="manualSoundFxCategoryHint" class="text-[12px] text-white/45 mb-4">效果类🤟</p>
                         <div id="manualSoundFxList" class="space-y-4 text-white"></div>
                     </div>
 
@@ -1267,8 +1293,11 @@
                             <button type="button" onclick="setManualStickerCategory('basketball')" data-sticker-cat="basketball" data-sticker-label="篮球类" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">篮球类</button>
                             <button type="button" onclick="setManualStickerCategory('hockey')" data-sticker-cat="hockey" data-sticker-label="冰球类" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">冰球类</button>
                             <button type="button" onclick="setManualStickerCategory('rugby')" data-sticker-cat="rugby" data-sticker-label="橄榄球类" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">橄榄球类</button>
+                            <button type="button" onclick="setManualStickerCategory('highlight_moment')" data-sticker-cat="highlight_moment" data-sticker-label="高光时刻" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">高光时刻</button>
+                            <button type="button" onclick="setManualStickerCategory('intense_clash')" data-sticker-cat="intense_clash" data-sticker-label="激烈对抗" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">激烈对抗</button>
+                            <button type="button" onclick="setManualStickerCategory('broadcast')" data-sticker-cat="broadcast" data-sticker-label="赛事转播" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">赛事转播</button>
                         </div>
-                        <p id="manualStickerCategoryHint" class="text-[12px] text-white/45 mb-3">特色专属贴纸</p>
+                        <p id="manualStickerCategoryHint" class="text-[12px] text-white/45 mb-3">Alvarez🤟</p>
                         <div id="manualStickerGrid" class="grid grid-cols-4 gap-3 text-white text-center text-[12px] overflow-y-auto no-scrollbar" style="max-height: 420px;"></div>
                     </div>
 
@@ -1292,7 +1321,7 @@
                             <button type="button" onclick="setManualFilterCategory('vintage')" data-filter-cat="vintage" data-filter-label="经典复古" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">经典复古</button>
                             <button type="button" onclick="setManualFilterCategory('other')" data-filter-cat="other" data-filter-label="其他场景" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">其他场景</button>
                         </div>
-                        <p id="manualFilterCategoryHint" class="text-[12px] text-white/45 mb-3">适用于足球等户外草地场景</p>
+                        <p id="manualFilterCategoryHint" class="text-[12px] text-white/45 mb-3">绿茵场</p>
                         <div id="manualFilterGrid" class="grid grid-cols-4 gap-3 text-white text-center text-[12px] overflow-y-auto no-scrollbar" style="max-height: 420px;"></div>
                     </div>
 
@@ -3952,6 +3981,7 @@
             } else {
                 hideManualMarkerLiteOverlay();
             }
+            renderManualVideoTrack();
         }
 
         function backToManualSelection() {
@@ -4077,8 +4107,146 @@
             enterManualEditorWorkspace();
             openManualEditorModal();
         }
+        const MANUAL_CLIP_THUMB = 'https://images.unsplash.com/photo-1546519638-68e109498ffc?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80';
+        let manualClipState = { split: false, junctionIndex: 0, selectedTransition: 'none', transitionCategory: 'new', applyToAll: false };
+        const transitionCategoryMeta = {
+            new: {
+                items: [
+                    { id: 'none', label: '无', icon: true },
+                    { id: 'shake_down', label: '向下抖动', grad: 'from-zinc-400 to-zinc-700' },
+                    { id: 'magic_star', label: '魔法星光', grad: 'from-emerald-300 to-green-800' },
+                    { id: 'blind_rotate', label: '百叶窗旋转', grad: 'from-sky-300 to-blue-800' },
+                    { id: 'glitch07', label: '故障07', grad: 'from-rose-300 to-fuchsia-800' },
+                    { id: 'diffuse', label: '扩散', grad: 'from-lime-300 to-teal-800' },
+                    { id: 'flash_cut', label: '闪白切换', grad: 'from-amber-200 to-orange-600' }
+                ]
+            },
+            '2d': {
+                items: [
+                    { id: 'none', label: '无', icon: true },
+                    { id: 'push_left', label: '向左推入', grad: 'from-slate-400 to-slate-700' },
+                    { id: 'wipe_up', label: '向上擦除', grad: 'from-cyan-300 to-blue-700' },
+                    { id: 'zoom_in', label: '放大进入', grad: 'from-violet-300 to-purple-800' },
+                    { id: 'slide_soft', label: '柔和滑动', grad: 'from-pink-300 to-rose-700' },
+                    { id: 'spin2d', label: '旋转2D', grad: 'from-orange-300 to-red-700' }
+                ]
+            },
+            '3d': {
+                items: [
+                    { id: 'none', label: '无', icon: true },
+                    { id: 'cube_flip', label: '立方翻转', grad: 'from-indigo-400 to-indigo-900' },
+                    { id: 'door3d', label: '3D开门', grad: 'from-amber-300 to-orange-800' },
+                    { id: 'depth_push', label: '纵深推进', grad: 'from-teal-300 to-cyan-900' },
+                    { id: 'page_turn', label: '翻页3D', grad: 'from-stone-300 to-stone-800' },
+                    { id: 'orbit3d', label: '环绕3D', grad: 'from-blue-300 to-blue-900' }
+                ]
+            }
+        };
+
+        function renderManualThumbCell(count) {
+            return Array.from({ length: count }, () =>
+                `<div class="w-[68px] h-[68px] rounded-md bg-[#222] overflow-hidden shrink-0"><img src="${MANUAL_CLIP_THUMB}" class="w-full h-full object-cover" alt=""></div>`
+            ).join('');
+        }
+
+        function getManualTransitionLabel(id) {
+            if (!id || id === 'none') return '';
+            for (const meta of Object.values(transitionCategoryMeta)) {
+                const item = meta.items.find(entry => entry.id === id);
+                if (item) return item.label;
+            }
+            return '';
+        }
+
+        function renderManualVideoTrack() {
+            const strip = document.getElementById('manualVideoTrackStrip');
+            if (!strip) return;
+            const addBtn = `<button type="button" class="w-[48px] h-[68px] rounded-[12px] bg-white text-[#333] text-[24px] font-light shrink-0 shadow-sm">+</button>`;
+            if (!manualClipState.split) {
+                strip.innerHTML = renderManualThumbCell(4) + addBtn;
+                return;
+            }
+            const junction = manualClipState.junctionIndex;
+            const transitionLabel = getManualTransitionLabel(manualClipState.selectedTransition);
+            strip.innerHTML = `
+                <div class="flex gap-1 shrink-0">${renderManualThumbCell(2)}</div>
+                <button type="button" onclick="openManualTransitionPanel(${junction})" class="shrink-0 w-7 h-[68px] flex flex-col items-center justify-center active:scale-95 transition group" aria-label="转场">
+                    <span class="w-[3px] h-[52px] rounded-full bg-white/90 group-hover:bg-[#ff7a00] transition"></span>
+                    ${transitionLabel ? `<span class="text-[9px] text-[#ff7a00] mt-1 whitespace-nowrap">${transitionLabel}</span>` : ''}
+                </button>
+                <div class="flex gap-1 shrink-0">${renderManualThumbCell(2)}</div>
+                ${addBtn}`;
+        }
+
+        function splitManualVideoClip() {
+            if (manualClipState.split) return;
+            manualClipState.split = true;
+            manualClipState.junctionIndex = 0;
+            manualClipState.selectedTransition = 'none';
+            renderManualVideoTrack();
+        }
+
+        function openManualTransitionPanel(junctionIndex) {
+            if (!manualClipState.split) return;
+            manualClipState.junctionIndex = junctionIndex || 0;
+            closeManualFilterLibrary();
+            closeManualStickerLibrary();
+            closeManualSoundFxPanel();
+            const panel = document.getElementById('manualTransitionPanel');
+            if (panel) panel.classList.remove('hidden');
+            setManualTransitionCategory(manualClipState.transitionCategory || 'new');
+        }
+
+        function closeManualTransitionPanel() {
+            const panel = document.getElementById('manualTransitionPanel');
+            if (panel) panel.classList.add('hidden');
+        }
+
+        function setManualTransitionCategory(cat) {
+            manualClipState.transitionCategory = cat;
+            document.querySelectorAll('[data-trans-cat]').forEach(tab => {
+                const active = tab.getAttribute('data-trans-cat') === cat;
+                const label = tab.getAttribute('data-trans-label') || tab.textContent.trim();
+                tab.className = `manual-trans-cat relative pb-2 shrink-0 ${active ? 'text-[#ff7a00]' : 'text-white/45'}`;
+                tab.innerHTML = label + (active ? '<span class="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ff7a00] rounded-full"></span>' : '');
+            });
+            const list = document.getElementById('manualTransitionList');
+            const meta = transitionCategoryMeta[cat] || transitionCategoryMeta.new;
+            if (!list) return;
+            list.innerHTML = meta.items.map(item => {
+                const active = manualClipState.selectedTransition === item.id;
+                const border = active ? 'border-white ring-2 ring-white/30' : 'border-transparent';
+                const inner = item.icon
+                    ? `<div class="w-full h-full flex items-center justify-center bg-[#2a2a30] text-white/70"><i class="fa-solid fa-ban text-[22px]"></i></div>`
+                    : `<div class="w-full h-full bg-gradient-to-br ${item.grad}"></div>`;
+                return `<button type="button" onclick="selectManualTransition('${item.id}')" class="shrink-0 w-[72px] active:scale-95 transition">
+                    <div class="w-[72px] h-[72px] rounded-lg overflow-hidden border-2 ${border}">${inner}</div>
+                    <p class="text-[11px] text-white/75 mt-1.5 truncate">${item.label}</p>
+                </button>`;
+            }).join('');
+        }
+
+        function selectManualTransition(id) {
+            manualClipState.selectedTransition = id;
+            setManualTransitionCategory(manualClipState.transitionCategory);
+            renderManualVideoTrack();
+        }
+
+        function toggleManualTransitionApplyAll() {
+            manualClipState.applyToAll = !manualClipState.applyToAll;
+            const btn = document.getElementById('manualTransitionApplyAllBtn');
+            if (btn) btn.classList.toggle('text-[#ff7a00]', manualClipState.applyToAll);
+            if (btn) btn.classList.toggle('text-white/55', !manualClipState.applyToAll);
+        }
+
+        function confirmManualTransition() {
+            closeManualTransitionPanel();
+            renderManualVideoTrack();
+        }
+
         function hideManualSubtoolPanels() {
             const panels = [
+                { el: document.getElementById('manualEditBar'), layout: 'flex' },
                 { el: document.getElementById('manualSubtitleBar'), layout: 'grid' },
                 { el: document.getElementById('manualStickerBar'), layout: 'flex' },
                 { el: document.getElementById('manualRatioBar'), layout: 'grid' },
@@ -4101,6 +4269,7 @@
         function openManualSubtool(type) {
             const mainBar = document.getElementById('manualToolMainBar');
             const subBar = document.getElementById('manualSubtoolBar');
+            const editBar = document.getElementById('manualEditBar');
             const subtitleBar = document.getElementById('manualSubtitleBar');
             const stickerBar = document.getElementById('manualStickerBar');
             const ratioBar = document.getElementById('manualRatioBar');
@@ -4112,12 +4281,15 @@
             closeManualStickerLibrary();
             closeManualFilterLibrary();
             closeManualSubtitleTemplateLibrary();
+            closeManualTransitionPanel();
             if (type === 'ratio') closeManualRatioMenu();
             mainBar.classList.add('hidden');
             subBar.classList.remove('hidden');
             subBar.classList.add('flex');
             hideManualSubtoolPanels();
-            if (type === 'subtitle') {
+            if (type === 'edit') {
+                showManualSubtoolPanel(document.getElementById('manualEditBar'), 'flex');
+            } else if (type === 'subtitle') {
                 showManualSubtoolPanel(subtitleBar, 'grid');
             } else if (type === 'sticker') {
                 showManualSubtoolPanel(stickerBar, 'flex');
@@ -4141,11 +4313,12 @@
             closeManualStickerLibrary();
             closeManualFilterLibrary();
             closeManualSubtitleTemplateLibrary();
+            closeManualTransitionPanel();
         }
 
         const filterCategoryMeta = {
             grass: {
-                hint: '适用于足球等户外草地场景',
+                hint: '绿茵场',
                 items: [
                     ['from-emerald-200 to-green-800', '草坪清新'],
                     ['from-lime-100 to-green-700', '绿茵增强'],
@@ -4158,7 +4331,7 @@
                 ]
             },
             wood: {
-                hint: '适用于篮球等室内场馆',
+                hint: '木质地板',
                 items: [
                     ['from-amber-100 to-orange-800', '木地板暖调'],
                     ['from-orange-100 to-amber-900', '馆内聚光'],
@@ -4171,7 +4344,7 @@
                 ]
             },
             ice: {
-                hint: '适用于冰球等高反光冷色调场景',
+                hint: '冰场',
                 items: [
                     ['from-cyan-100 to-blue-900', '冰面冷调'],
                     ['from-sky-100 to-indigo-900', '极地高光'],
@@ -4184,7 +4357,7 @@
                 ]
             },
             highlight: {
-                hint: '强化对比度与饱和度的高光滤镜',
+                hint: '最佳时刻',
                 items: [
                     ['from-rose-100 to-orange-600', '高光爆发'],
                     ['from-amber-100 to-red-700', '瞬间燃点'],
@@ -4197,7 +4370,7 @@
                 ]
             },
             vintage: {
-                hint: '胶片、黑白、怀旧感调色',
+                hint: '经典复古',
                 items: [
                     ['from-stone-200 to-stone-700', '经典黑白'],
                     ['from-amber-100 to-stone-600', '胶片暖黄'],
@@ -4210,7 +4383,7 @@
                 ]
             },
             other: {
-                hint: '通用型环境滤镜',
+                hint: '其他场景',
                 items: [
                     ['from-sky-100 to-blue-700', '晴空通透'],
                     ['from-slate-100 to-slate-700', '中性平衡'],
@@ -4279,6 +4452,7 @@
             closeManualStickerLibrary();
             closeManualFxLibrary();
             closeManualSubtitleTemplateLibrary();
+            closeManualTransitionPanel();
             const panel = document.getElementById('manualFilterLibraryPanel');
             if (panel) panel.classList.remove('hidden');
             const input = document.getElementById('manualFilterSearchInput');
@@ -4293,7 +4467,7 @@
 
         const soundFxCategoryMeta = {
             effect: {
-                hint: '欢呼、口哨、碰撞、系统UI音效等',
+                hint: '效果类🤟',
                 items: [
                     { name: '欢呼', duration: '00:03' },
                     { name: '口哨', duration: '00:02', badge: 'limited' },
@@ -4302,7 +4476,7 @@
                 ]
             },
             basketball: {
-                hint: '运球、刷网、打铁、球鞋摩擦声',
+                hint: '篮球',
                 items: [
                     { name: '运球', duration: '00:04' },
                     { name: '刷网', duration: '00:02' },
@@ -4311,7 +4485,7 @@
                 ]
             },
             football: {
-                hint: '踢球声、中柱声、长传破空声',
+                hint: '足球',
                 items: [
                     { name: '踢球声', duration: '00:02' },
                     { name: '中柱声', duration: '00:02', badge: 'limited' },
@@ -4319,7 +4493,7 @@
                 ]
             },
             hockey: {
-                hint: '冰刀急停、冰球撞击挡板声',
+                hint: '冰球',
                 items: [
                     { name: '冰刀急停', duration: '00:03' },
                     { name: '撞击挡板', duration: '00:02' },
@@ -4376,7 +4550,7 @@
 
         const stickerCategoryMeta = {
             alvarez: {
-                hint: '特色专属贴纸',
+                hint: 'Alvarez🤟',
                 items: [
                     ['from-amber-100 to-orange-600', 'Alvarez签名'],
                     ['from-violet-100 to-purple-700', '专属徽章'],
@@ -4389,7 +4563,7 @@
                 ]
             },
             effect: {
-                hint: '速度线、震动、发光等通用视觉特效',
+                hint: '效果类',
                 items: [
                     ['from-orange-100 to-orange-500', '速度线'],
                     ['from-pink-100 to-rose-600', '震动波纹'],
@@ -4402,7 +4576,7 @@
                 ]
             },
             football: {
-                hint: '足球元素（比分、战术板、足球图案等）',
+                hint: '足球类',
                 items: [
                     ['from-emerald-100 to-green-700', '比分牌'],
                     ['from-lime-100 to-emerald-700', '战术板'],
@@ -4415,7 +4589,7 @@
                 ]
             },
             basketball: {
-                hint: '篮球元素（篮筐、火焰篮球等）',
+                hint: '篮球类',
                 items: [
                     ['from-orange-100 to-red-700', '火焰篮球'],
                     ['from-amber-100 to-orange-500', '篮筐高亮'],
@@ -4428,7 +4602,7 @@
                 ]
             },
             hockey: {
-                hint: '冰球元素（球杆、冰球等）',
+                hint: '冰球类',
                 items: [
                     ['from-cyan-100 to-blue-700', '冰球'],
                     ['from-slate-100 to-slate-700', '球杆'],
@@ -4441,7 +4615,7 @@
                 ]
             },
             rugby: {
-                hint: '橄榄球元素（头盔、达阵标识等）',
+                hint: '橄榄球类',
                 items: [
                     ['from-emerald-100 to-green-700', '头盔'],
                     ['from-amber-100 to-orange-600', '达阵标识'],
@@ -4451,6 +4625,45 @@
                     ['from-violet-100 to-purple-700', '战术箭头'],
                     ['from-rose-100 to-pink-700', '罚踢提示'],
                     ['from-zinc-100 to-zinc-800', '队徽角标']
+                ]
+            },
+            highlight_moment: {
+                hint: '高光时刻',
+                items: [
+                    ['from-amber-100 to-orange-600', '绝杀标签'],
+                    ['from-rose-100 to-red-700', '球星聚光'],
+                    ['from-yellow-100 to-amber-600', '得分爆炸'],
+                    ['from-orange-100 to-rose-700', 'MVP时刻'],
+                    ['from-violet-100 to-purple-700', '慢镜边框'],
+                    ['from-red-100 to-orange-700', '燃点字幕'],
+                    ['from-pink-100 to-fuchsia-700', '庆祝粒子'],
+                    ['from-amber-200 to-red-800', '高光闪白']
+                ]
+            },
+            intense_clash: {
+                hint: '激烈对抗',
+                items: [
+                    ['from-red-100 to-rose-900', '冲撞箭头'],
+                    ['from-orange-100 to-red-800', '对抗火花'],
+                    ['from-stone-100 to-zinc-800', '拼抢标识'],
+                    ['from-amber-100 to-orange-700', '犯规提示'],
+                    ['from-rose-100 to-pink-800', '力量波纹'],
+                    ['from-slate-100 to-red-900', '贴身防守'],
+                    ['from-orange-200 to-amber-900', '激烈字幕'],
+                    ['from-red-200 to-rose-800', '对抗定格']
+                ]
+            },
+            broadcast: {
+                hint: '赛事转播',
+                items: [
+                    ['from-indigo-100 to-blue-900', '直播角标'],
+                    ['from-slate-100 to-slate-800', '赛事标题'],
+                    ['from-sky-100 to-indigo-800', '转播条'],
+                    ['from-blue-100 to-cyan-800', '比分包装'],
+                    ['from-violet-100 to-purple-800', '频道Logo'],
+                    ['from-zinc-100 to-zinc-700', '计时条'],
+                    ['from-cyan-100 to-blue-700', '现场字幕'],
+                    ['from-indigo-200 to-slate-900', '赛事信息']
                 ]
             }
         };
