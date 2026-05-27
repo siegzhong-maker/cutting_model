@@ -1193,7 +1193,7 @@
                     <div class="mt-auto pt-2 pb-0">
                         <div id="manualToolMainBar" class="grid grid-cols-7 gap-1 text-center text-white/90 px-1.5 pt-1.5 pb-0">
                             <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-rectangle-list text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">编辑</span></button>
-                            <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-droplet text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">滤镜</span></button>
+                            <button type="button" onclick="openManualFilterLibrary()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-droplet text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">滤镜</span></button>
                             <button type="button" onclick="openManualSubtool('subtitle')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-closed-captioning text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">字幕</span></button>
                             <button type="button" onclick="openManualSubtool('sticker')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-face-smile text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">贴纸</span></button>
                             <button type="button" onclick="openManualSubtool('audio')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-music text-[21px] block mb-1"></i><span class="text-[10px] leading-none whitespace-nowrap">音频</span></button>
@@ -1272,6 +1272,29 @@
                         <div id="manualStickerGrid" class="grid grid-cols-4 gap-3 text-white text-center text-[12px] overflow-y-auto no-scrollbar" style="max-height: 420px;"></div>
                     </div>
 
+                    <div id="manualFilterLibraryPanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#232327] rounded-t-[26px] border-t border-white/5 px-4 pt-2 pb-5 shadow-2xl max-h-[70%]">
+                        <div class="flex items-center justify-between mb-2 px-1">
+                            <div class="w-8"></div>
+                            <h3 class="text-[16px] font-semibold text-white">添加滤镜</h3>
+                            <button type="button" onclick="closeManualFilterLibrary()" class="w-8 h-8 rounded-full flex items-center justify-center text-white/80 active:scale-95 transition"><i class="fa-solid fa-chevron-down text-[18px]"></i></button>
+                        </div>
+                        <div class="mb-2 px-1">
+                            <div class="h-10 rounded-[14px] bg-white/8 border border-white/6 flex items-center px-3 gap-2 text-white/70">
+                                <i class="fa-solid fa-magnifying-glass text-[13px]"></i>
+                                <input id="manualFilterSearchInput" type="text" placeholder="搜索滤镜" oninput="filterManualFilterItems()" class="flex-1 bg-transparent outline-none text-[14px] placeholder:text-white/35 text-white" />
+                            </div>
+                        </div>
+                        <div id="manualFilterCategoryBar" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar mb-2 whitespace-nowrap pr-6 cursor-grab active:cursor-grabbing" style="-webkit-overflow-scrolling: touch; touch-action: pan-x;">
+                            <button type="button" onclick="setManualFilterCategory('grass')" data-filter-cat="grass" data-filter-label="绿茵场" class="px-3 h-9 rounded-lg bg-[#ff7a00]/18 text-[#ff9a42] text-[14px] font-semibold shrink-0">绿茵场</button>
+                            <button type="button" onclick="setManualFilterCategory('wood')" data-filter-cat="wood" data-filter-label="木质地板" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">木质地板</button>
+                            <button type="button" onclick="setManualFilterCategory('ice')" data-filter-cat="ice" data-filter-label="冰场" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">冰场</button>
+                            <button type="button" onclick="setManualFilterCategory('highlight')" data-filter-cat="highlight" data-filter-label="最佳时刻" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">最佳时刻</button>
+                            <button type="button" onclick="setManualFilterCategory('vintage')" data-filter-cat="vintage" data-filter-label="经典复古" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">经典复古</button>
+                            <button type="button" onclick="setManualFilterCategory('other')" data-filter-cat="other" data-filter-label="其他场景" class="px-3 h-9 rounded-lg bg-white/8 text-white/55 text-[14px] font-semibold shrink-0">其他场景</button>
+                        </div>
+                        <p id="manualFilterCategoryHint" class="text-[12px] text-white/45 mb-3">适用于足球等户外草地场景</p>
+                        <div id="manualFilterGrid" class="grid grid-cols-4 gap-3 text-white text-center text-[12px] overflow-y-auto no-scrollbar" style="max-height: 420px;"></div>
+                    </div>
 
                     <div id="manualSubtitleTemplatePanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#232327] rounded-t-[26px] border-t border-white/5 px-4 pt-2 pb-5 shadow-2xl max-h-[70%]">
                         <div class="flex items-center justify-between mb-2 px-1">
@@ -4087,6 +4110,7 @@
             closeManualSoundFxPanel();
             closeManualFxLibrary();
             closeManualStickerLibrary();
+            closeManualFilterLibrary();
             closeManualSubtitleTemplateLibrary();
             if (type === 'ratio') closeManualRatioMenu();
             mainBar.classList.add('hidden');
@@ -4115,7 +4139,156 @@
             closeManualSoundFxPanel();
             closeManualFxLibrary();
             closeManualStickerLibrary();
+            closeManualFilterLibrary();
             closeManualSubtitleTemplateLibrary();
+        }
+
+        const filterCategoryMeta = {
+            grass: {
+                hint: '适用于足球等户外草地场景',
+                items: [
+                    ['from-emerald-200 to-green-800', '草坪清新'],
+                    ['from-lime-100 to-green-700', '绿茵增强'],
+                    ['from-teal-100 to-emerald-800', '户外自然'],
+                    ['from-green-100 to-lime-700', '草地柔光'],
+                    ['from-emerald-100 to-teal-700', '赛场通透'],
+                    ['from-lime-200 to-green-600', '午后球场'],
+                    ['from-green-200 to-emerald-900', '深绿对比'],
+                    ['from-teal-200 to-green-700', '雨后草地']
+                ]
+            },
+            wood: {
+                hint: '适用于篮球等室内场馆',
+                items: [
+                    ['from-amber-100 to-orange-800', '木地板暖调'],
+                    ['from-orange-100 to-amber-900', '馆内聚光'],
+                    ['from-yellow-100 to-orange-700', '室内明亮'],
+                    ['from-amber-200 to-red-900', '暖色场馆'],
+                    ['from-orange-200 to-amber-800', '运动馆'],
+                    ['from-stone-100 to-amber-900', '木质质感'],
+                    ['from-amber-100 to-yellow-800', '灯光球场'],
+                    ['from-orange-100 to-red-800', '热血室内']
+                ]
+            },
+            ice: {
+                hint: '适用于冰球等高反光冷色调场景',
+                items: [
+                    ['from-cyan-100 to-blue-900', '冰面冷调'],
+                    ['from-sky-100 to-indigo-900', '极地高光'],
+                    ['from-blue-100 to-cyan-800', '冰场清透'],
+                    ['from-slate-100 to-blue-800', '冷色反光'],
+                    ['from-cyan-200 to-blue-700', '冰刀轨迹'],
+                    ['from-indigo-100 to-cyan-900', '寒色增强'],
+                    ['from-sky-200 to-slate-800', '冰场氛围'],
+                    ['from-blue-200 to-indigo-900', '冷冽质感']
+                ]
+            },
+            highlight: {
+                hint: '强化对比度与饱和度的高光滤镜',
+                items: [
+                    ['from-rose-100 to-orange-600', '高光爆发'],
+                    ['from-amber-100 to-red-700', '瞬间燃点'],
+                    ['from-orange-100 to-rose-700', '饱和度+'],
+                    ['from-yellow-100 to-orange-600', '对比增强'],
+                    ['from-red-100 to-amber-700', '热血高光'],
+                    ['from-pink-100 to-orange-700', '球星时刻'],
+                    ['from-orange-200 to-red-800', '绝杀滤镜'],
+                    ['from-amber-200 to-rose-700', '巅峰瞬间']
+                ]
+            },
+            vintage: {
+                hint: '胶片、黑白、怀旧感调色',
+                items: [
+                    ['from-stone-200 to-stone-700', '经典黑白'],
+                    ['from-amber-100 to-stone-600', '胶片暖黄'],
+                    ['from-zinc-200 to-zinc-700', '怀旧灰调'],
+                    ['from-orange-100 to-stone-800', '复古颗粒'],
+                    ['from-neutral-200 to-neutral-700', '老电影'],
+                    ['from-amber-200 to-orange-900', '暖色胶片'],
+                    ['from-stone-100 to-zinc-800', '低饱和复古'],
+                    ['from-yellow-100 to-stone-700', '年代感']
+                ]
+            },
+            other: {
+                hint: '通用型环境滤镜',
+                items: [
+                    ['from-sky-100 to-blue-700', '晴空通透'],
+                    ['from-slate-100 to-slate-700', '中性平衡'],
+                    ['from-violet-100 to-purple-700', '暮色氛围'],
+                    ['from-teal-100 to-cyan-700', '清新日常'],
+                    ['from-indigo-100 to-blue-800', '夜景补光'],
+                    ['from-gray-100 to-gray-700', '标准校正'],
+                    ['from-rose-100 to-pink-700', '柔和人像'],
+                    ['from-lime-100 to-green-700', '自然还原']
+                ]
+            }
+        };
+
+        function setManualFilterCategory(cat) {
+            const tabs = document.querySelectorAll('[data-filter-cat]');
+            tabs.forEach(tab => {
+                const active = tab.getAttribute('data-filter-cat') === cat;
+                const label = tab.getAttribute('data-filter-label') || tab.textContent.trim();
+                tab.className = `px-3 h-9 rounded-lg text-[14px] font-semibold shrink-0 ${active ? 'bg-[#ff7a00]/18 text-[#ff9a42]' : 'bg-white/8 text-white/55'}`;
+                tab.textContent = label;
+            });
+            const bar = document.getElementById('manualFilterCategoryBar');
+            const activeTab = document.querySelector(`[data-filter-cat="${cat}"]`);
+            if (bar && activeTab) {
+                activeTab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+            const hint = document.getElementById('manualFilterCategoryHint');
+            const grid = document.getElementById('manualFilterGrid');
+            const meta = filterCategoryMeta[cat] || filterCategoryMeta.grass;
+            if (hint) hint.innerText = meta.hint;
+            if (!grid) return;
+            grid.innerHTML = meta.items.map(([grad, label]) => `
+                <button type="button" class="manual-filter-item active:scale-95 transition" data-filter-label="${label}" onclick="setManualFilterCardActive(this)">
+                    <div class="h-24 rounded-2xl relative overflow-hidden border border-white/10">
+                        <div class="absolute inset-0 bg-gradient-to-br ${grad} opacity-90"></div>
+                        <span class="absolute bottom-0 inset-x-0 py-1.5 text-[11px] font-medium bg-black/45 truncate px-1">${label}</span>
+                    </div>
+                </button>
+            `).join('');
+            filterManualFilterItems();
+        }
+
+        function filterManualFilterItems() {
+            const input = document.getElementById('manualFilterSearchInput');
+            const keyword = (input?.value || '').trim().toLowerCase();
+            document.querySelectorAll('#manualFilterGrid .manual-filter-item').forEach(item => {
+                const label = (item.getAttribute('data-filter-label') || '').toLowerCase();
+                item.style.display = !keyword || label.includes(keyword) ? '' : 'none';
+            });
+        }
+
+        function setManualFilterCardActive(el) {
+            document.querySelectorAll('#manualFilterGrid .manual-filter-item > div').forEach(card => {
+                card.classList.remove('border-[#ff7a00]', 'ring-2', 'ring-[#ff7a00]/60');
+                card.classList.add('border-white/10');
+            });
+            const card = el.querySelector('div');
+            if (card) {
+                card.classList.remove('border-white/10');
+                card.classList.add('border-[#ff7a00]', 'ring-2', 'ring-[#ff7a00]/60');
+            }
+        }
+
+        function openManualFilterLibrary() {
+            closeManualSoundFxPanel();
+            closeManualStickerLibrary();
+            closeManualFxLibrary();
+            closeManualSubtitleTemplateLibrary();
+            const panel = document.getElementById('manualFilterLibraryPanel');
+            if (panel) panel.classList.remove('hidden');
+            const input = document.getElementById('manualFilterSearchInput');
+            if (input) input.value = '';
+            setManualFilterCategory('grass');
+        }
+
+        function closeManualFilterLibrary() {
+            const panel = document.getElementById('manualFilterLibraryPanel');
+            if (panel) panel.classList.add('hidden');
         }
 
         const soundFxCategoryMeta = {
@@ -4156,6 +4329,10 @@
         };
 
         function openManualSoundFxPanel() {
+            closeManualFilterLibrary();
+            closeManualStickerLibrary();
+            closeManualFxLibrary();
+            closeManualSubtitleTemplateLibrary();
             const panel = document.getElementById('manualSoundFxPanel');
             if (!panel) return;
             panel.classList.remove('hidden');
@@ -4330,6 +4507,10 @@
         }
 
         function openManualStickerLibrary() {
+            closeManualFilterLibrary();
+            closeManualSoundFxPanel();
+            closeManualFxLibrary();
+            closeManualSubtitleTemplateLibrary();
             const panel = document.getElementById('manualStickerLibraryPanel');
             if (panel) panel.classList.remove('hidden');
             const input = document.getElementById('manualStickerSearchInput');
@@ -4441,6 +4622,10 @@
         }
 
         function openManualFxLibrary() {
+            closeManualFilterLibrary();
+            closeManualSoundFxPanel();
+            closeManualStickerLibrary();
+            closeManualSubtitleTemplateLibrary();
             const panel = document.getElementById('manualFxLibraryPanel');
             if (panel) panel.classList.remove('hidden');
             setManualFxCategory('football');
@@ -4500,6 +4685,10 @@
         }
 
         function openManualSubtitleTemplateLibrary() {
+            closeManualFilterLibrary();
+            closeManualSoundFxPanel();
+            closeManualStickerLibrary();
+            closeManualFxLibrary();
             const panel = document.getElementById('manualSubtitleTemplatePanel');
             if (panel) panel.classList.remove('hidden');
             setManualSubtitleCategory('score_highlight');
