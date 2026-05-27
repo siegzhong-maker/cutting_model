@@ -1233,10 +1233,11 @@
                                 <button type="button" onclick="setManualRatio('3:4')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><span class="text-[10px] leading-none whitespace-nowrap">3:4</span></button>
                                 <button type="button" onclick="setManualRatio('4:3')" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><span class="text-[10px] leading-none whitespace-nowrap">4:3</span></button>
                             </div>
-                            <div id="manualAudioBar" class="hidden flex-1 grid grid-cols-3 gap-1 text-center">
+                            <div id="manualAudioBar" class="hidden flex-1 grid grid-cols-4 gap-1 text-center">
                                 <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-music text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">音乐</span></button>
                                 <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-microphone text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">录音</span></button>
                                 <button class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-wave-square text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">提取</span></button>
+                                <button type="button" onclick="openManualSoundFxPanel()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-solid fa-bell text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">音效</span></button>
                             </div>
                             <div id="manualFxBar" class="hidden flex-1 flex justify-center text-center">
                                 <button type="button" onclick="openManualFxLibrary()" class="py-2.5 active:scale-95 transition flex flex-col items-center justify-start min-w-0"><i class="fa-regular fa-star text-[22px] block mb-1.5"></i><span class="text-[10px] leading-none whitespace-nowrap">特效</span></button>
@@ -1256,6 +1257,21 @@
                             <button type="button" onclick="toggleManualTransitionApplyAll()" id="manualTransitionApplyAllBtn" class="text-[14px] text-white/55 active:opacity-80 transition">应用到全部</button>
                             <button type="button" onclick="confirmManualTransition()" class="w-10 h-10 flex items-center justify-center text-white active:scale-95 transition"><i class="fa-solid fa-check text-[22px]"></i></button>
                         </div>
+                    </div>
+
+                    <div id="manualSoundFxPanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#15151b] rounded-t-[26px] border-t border-white/5 px-4 pt-4 pb-6 shadow-2xl">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="flex-1 h-12 rounded-full bg-white/10 flex items-center px-4 text-white/45 text-[15px]"><i class="fa-solid fa-magnifying-glass mr-3 text-[16px]"></i>输入搜索词</div>
+                            <button type="button" onclick="closeManualSoundFxPanel()" class="w-11 h-11 rounded-full text-[#ff335c] text-[24px] flex items-center justify-center active:scale-95 transition"><i class="fa-solid fa-check"></i></button>
+                        </div>
+                        <div class="flex items-center gap-7 text-[15px] font-semibold mb-2 overflow-x-auto no-scrollbar whitespace-nowrap">
+                            <button type="button" onclick="setManualSoundFxCategory('effect')" data-sfx-cat="effect" data-sfx-label="效果类🤟" class="manual-sfx-cat text-[#ff335c] relative pb-1">效果类🤟<span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#ff335c]"></span></button>
+                            <button type="button" onclick="setManualSoundFxCategory('basketball')" data-sfx-cat="basketball" data-sfx-label="篮球" class="manual-sfx-cat text-white/90 relative pb-1">篮球</button>
+                            <button type="button" onclick="setManualSoundFxCategory('football')" data-sfx-cat="football" data-sfx-label="足球" class="manual-sfx-cat text-white/90 relative pb-1">足球</button>
+                            <button type="button" onclick="setManualSoundFxCategory('hockey')" data-sfx-cat="hockey" data-sfx-label="冰球" class="manual-sfx-cat text-white/90 relative pb-1">冰球</button>
+                        </div>
+                        <p id="manualSoundFxCategoryHint" class="text-[12px] text-white/45 mb-4">效果类🤟</p>
+                        <div id="manualSoundFxList" class="space-y-4 text-white"></div>
                     </div>
 
                     <div id="manualStickerLibraryPanel" class="hidden absolute left-0 right-0 bottom-0 z-40 bg-[#232327] rounded-t-[26px] border-t border-white/5 px-4 pt-2 pb-5 shadow-2xl max-h-[70%]">
@@ -4175,6 +4191,7 @@
             manualClipState.junctionIndex = junctionIndex || 0;
             closeManualFilterLibrary();
             closeManualStickerLibrary();
+            closeManualSoundFxPanel();
             const panel = document.getElementById('manualTransitionPanel');
             if (panel) panel.classList.remove('hidden');
             setManualTransitionCategory(manualClipState.transitionCategory || 'new');
@@ -4259,6 +4276,7 @@
             const audioBar = document.getElementById('manualAudioBar');
             const fxBar = document.getElementById('manualFxBar');
             if (!mainBar || !subBar) return;
+            closeManualSoundFxPanel();
             closeManualFxLibrary();
             closeManualStickerLibrary();
             closeManualFilterLibrary();
@@ -4290,6 +4308,7 @@
             if (mainBar) mainBar.classList.remove('hidden');
             if (subBar) { subBar.classList.add('hidden'); subBar.classList.remove('flex'); }
             hideManualSubtoolPanels();
+            closeManualSoundFxPanel();
             closeManualFxLibrary();
             closeManualStickerLibrary();
             closeManualFilterLibrary();
@@ -4429,6 +4448,7 @@
         }
 
         function openManualFilterLibrary() {
+            closeManualSoundFxPanel();
             closeManualStickerLibrary();
             closeManualFxLibrary();
             closeManualSubtitleTemplateLibrary();
@@ -4443,6 +4463,89 @@
         function closeManualFilterLibrary() {
             const panel = document.getElementById('manualFilterLibraryPanel');
             if (panel) panel.classList.add('hidden');
+        }
+
+        const soundFxCategoryMeta = {
+            effect: {
+                hint: '效果类🤟',
+                items: [
+                    { name: '欢呼', duration: '00:03' },
+                    { name: '口哨', duration: '00:02', badge: 'limited' },
+                    { name: '碰撞', duration: '00:02' },
+                    { name: '系统UI音效', duration: '00:01', badge: 'paid' }
+                ]
+            },
+            basketball: {
+                hint: '篮球',
+                items: [
+                    { name: '运球', duration: '00:04' },
+                    { name: '刷网', duration: '00:02' },
+                    { name: '打铁', duration: '00:02' },
+                    { name: '球鞋摩擦', duration: '00:03' }
+                ]
+            },
+            football: {
+                hint: '足球',
+                items: [
+                    { name: '踢球声', duration: '00:02' },
+                    { name: '中柱声', duration: '00:02', badge: 'limited' },
+                    { name: '长传破空', duration: '00:04' }
+                ]
+            },
+            hockey: {
+                hint: '冰球',
+                items: [
+                    { name: '冰刀急停', duration: '00:03' },
+                    { name: '撞击挡板', duration: '00:02' },
+                    { name: '滑行摩擦', duration: '00:04' }
+                ]
+            }
+        };
+
+        function openManualSoundFxPanel() {
+            closeManualFilterLibrary();
+            closeManualStickerLibrary();
+            closeManualFxLibrary();
+            closeManualSubtitleTemplateLibrary();
+            const panel = document.getElementById('manualSoundFxPanel');
+            if (!panel) return;
+            panel.classList.remove('hidden');
+            setManualSoundFxCategory('effect');
+        }
+
+        function closeManualSoundFxPanel() {
+            const panel = document.getElementById('manualSoundFxPanel');
+            if (panel) panel.classList.add('hidden');
+        }
+
+        function setManualSoundFxCategory(cat) {
+            const tabs = document.querySelectorAll('[data-sfx-cat]');
+            tabs.forEach(tab => {
+                const active = tab.getAttribute('data-sfx-cat') === cat;
+                const label = tab.getAttribute('data-sfx-label') || tab.textContent.trim();
+                tab.className = `manual-sfx-cat relative pb-1 ${active ? 'text-[#ff335c]' : 'text-white/90'}`;
+                tab.innerHTML = label + (active ? '<span class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#ff335c]"></span>' : '');
+            });
+            const hint = document.getElementById('manualSoundFxCategoryHint');
+            const list = document.getElementById('manualSoundFxList');
+            const meta = soundFxCategoryMeta[cat] || soundFxCategoryMeta.effect;
+            if (hint) hint.innerText = meta.hint;
+            if (!list) return;
+            list.innerHTML = meta.items.map(({ name, duration, badge }) => `
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center min-w-0 gap-3">
+                        <i class="fa-solid fa-music text-[22px] text-white/90"></i>
+                        <div class="min-w-0">
+                            <p class="text-[14px] font-medium truncate inline-flex items-center gap-1.5">
+                                ${name}
+                                ${badge === 'paid' ? '<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-rose-500/95 text-white text-[10px] font-bold shadow-sm">付费</span>' : ''}
+                                ${badge === 'limited' ? '<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-amber-400/95 text-gray-900 text-[10px] font-bold shadow-sm">限免</span>' : ''}
+                            </p>
+                            <p class="text-[12px] text-white/45 mt-0.5">${duration}</p>
+                        </div>
+                    </div>
+                    <button class="w-10 h-10 rounded-full flex items-center justify-center text-white/90 active:scale-95 transition"><i class="fa-solid fa-arrow-down text-[24px]"></i></button>
+                </div>`).join('');
         }
 
         const stickerCategoryMeta = {
@@ -4618,6 +4721,7 @@
 
         function openManualStickerLibrary() {
             closeManualFilterLibrary();
+            closeManualSoundFxPanel();
             closeManualFxLibrary();
             closeManualSubtitleTemplateLibrary();
             const panel = document.getElementById('manualStickerLibraryPanel');
@@ -4732,6 +4836,7 @@
 
         function openManualFxLibrary() {
             closeManualFilterLibrary();
+            closeManualSoundFxPanel();
             closeManualStickerLibrary();
             closeManualSubtitleTemplateLibrary();
             const panel = document.getElementById('manualFxLibraryPanel');
@@ -4794,6 +4899,7 @@
 
         function openManualSubtitleTemplateLibrary() {
             closeManualFilterLibrary();
+            closeManualSoundFxPanel();
             closeManualStickerLibrary();
             closeManualFxLibrary();
             const panel = document.getElementById('manualSubtitleTemplatePanel');
